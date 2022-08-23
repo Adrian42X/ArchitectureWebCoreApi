@@ -25,6 +25,7 @@ namespace BL.Messages.Services
             {
                 Title = entity.Title,
                 Description = entity.Description,
+                Price = entity.Price,
             }).ToList();
         }
     }
