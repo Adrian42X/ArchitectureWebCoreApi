@@ -19,5 +19,7 @@ namespace ArchitectureWebCoreApi.Controllers
         {
             return _userService.GetAll();
         }
+
+
     }
 }
