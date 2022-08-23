@@ -12,6 +12,6 @@ namespace ProjectDatabase.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string password { get; set; }
-        public ICollection<Message> Messages { get; set; }
+        public ICollection<Message>? Messages { get; set; }
     }
 }

@@ -11,9 +11,9 @@ namespace Core.Repositories
         T Get();
         T Add(T entity);
         IEnumerable<T> GetAll();
-        IEnumerable<T> FindByName(string name);
-        IEnumerable<T> FindById(int id);
+        T FindByName(string name);
+        T FindById(int id);
         T Update(T entity);
-        bool Delete(int id);
+        public void Delete(int id);
     }
 }

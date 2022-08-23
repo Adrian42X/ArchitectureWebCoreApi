@@ -19,20 +19,28 @@ namespace DA.Users
 
         public User Add(User entity)
         {
-            throw new NotImplementedException();
+            _projectContext.Users.Add(entity);
+            _projectContext.SaveChanges();
+            return entity;
         }
 
-        public bool Delete(int id)
+        public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var user = _projectContext.Users.FirstOrDefault(x => x.Id == id);
+            if (user != null)
+            {
+                _projectContext.Remove(user);
+                _projectContext.SaveChanges();
+                
+            }    
         }
 
-        public IEnumerable<User> FindById(int id)
+        public User FindById(int id)
         {
-            throw new NotImplementedException();
+            return _projectContext.Users.SingleOrDefault(x => x.Id == id);
         }
 
-        public IEnumerable<User> FindByName(string name)
+        public User FindByName(string name)
         {
             throw new NotImplementedException();
         }
@@ -47,9 +55,15 @@ namespace DA.Users
             return _projectContext.Users;
         }
 
-        public User Update(User entity)
+        public User Update(User userUpdate)
         {
-            throw new NotImplementedException();
+            var userUpdated=_projectContext.Users.FirstOrDefault(x => x.Id == userUpdate.Id);
+            userUpdated.FirstName=userUpdate.FirstName;
+            userUpdated.LastName=userUpdate.LastName;
+            userUpdated.password = userUpdate.password;
+            _projectContext.SaveChanges();
+            return userUpdate;
         }
+       
     }
 }

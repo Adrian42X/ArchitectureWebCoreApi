@@ -22,17 +22,17 @@ namespace DA.Messages
             throw new NotImplementedException();
         }
 
-        public bool Delete(int id)
+        public void Delete(int id)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Message> FindById(int id)
+        public Message FindById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Message> FindByName(string name)
+        public Message FindByName(string name)
         {
             throw new NotImplementedException();
         }
