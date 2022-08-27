@@ -17,7 +17,7 @@ namespace DA.Users
             _projectContext = context;
         }
 
-        public User Add(User entity)
+        public async Task<User> Add(User entity)
         {
             _projectContext.Users.Add(entity);
             _projectContext.SaveChanges();
@@ -31,13 +31,12 @@ namespace DA.Users
             {
                 _projectContext.Remove(user);
                 _projectContext.SaveChanges();
-                
             }    
         }
 
-        public User FindById(int id)
+        public async Task<User> FindById(int id)
         {
-            return _projectContext.Users.SingleOrDefault(x => x.Id == id);
+           return await _projectContext.FindAsync<User>(id);
         }
 
         public User FindByName(string name)
@@ -50,9 +49,9 @@ namespace DA.Users
             throw new NotImplementedException();
         }
 
-        public IEnumerable<User> GetAll()
+        public IEnumerable<User> GetAll(int offset,int limit)
         {
-            return _projectContext.Users;
+            return _projectContext.Users.Skip(offset).Take(limit);
         }
 
         public User Update(User userUpdate)

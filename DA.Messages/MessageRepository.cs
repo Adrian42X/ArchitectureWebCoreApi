@@ -17,7 +17,7 @@ namespace DA.Messages
             _projectContext = context;
         }
 
-        public Message Add(Message entity)
+        public Task<Message> Add(Message entity)
         {
             throw new NotImplementedException();
         }
@@ -27,7 +27,7 @@ namespace DA.Messages
             throw new NotImplementedException();
         }
 
-        public Message FindById(int id)
+        public async Task<Message?> FindById(int id)
         {
             throw new NotImplementedException();
         }
@@ -42,9 +42,9 @@ namespace DA.Messages
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Message> GetAll()
+        public IEnumerable<Message> GetAll(int offset,int limit)
         {
-            return _projectContext.Messsages;
+            return _projectContext.Messsages.Skip(offset).Take(limit);
         }
 
         public Message Update(Message entity)

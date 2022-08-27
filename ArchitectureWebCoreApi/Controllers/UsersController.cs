@@ -2,6 +2,7 @@
 using Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using ProjectDatabase.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace ArchitectureWebCoreApi.Controllers
 {
@@ -16,16 +17,33 @@ namespace ArchitectureWebCoreApi.Controllers
         }
         [HttpGet]
 
-        public IEnumerable<UserList> UsersAsync()
+        public ActionResult<IEnumerable<UserList>> GetUsers([Range(0,int.MaxValue)] int offset=0,[Range(0,100)]int limit=10)
         {
-            return _userService.GetAll();
+            return Ok(_userService.GetAll(offset,limit));
+        }
+
+        [HttpGet]
+        [Route("{userId}")]
+        public async Task<ActionResult<UserList>> GetUserById([Required][FromRoute]int userId)
+        {
+            var user = await _userService.GetById(userId);
+            if(user == null)
+            {
+                return NotFound();
+            }
+            return Ok(user);
         }
         
 
         [HttpPost]
-        public void AddUserAsync(User newUser)
+        public async Task<ActionResult<UserList>> AddUser(
+            [Required][FromForm]string firstName,
+            [Required][FromForm] string lastName,
+            [Required][FromForm] string password)
         {
-            _userService.Add(newUser);
+            var createdUser=await _userService.AddUser(firstName, lastName, password);
+
+            return Ok(createdUser);
         }
 
         [HttpDelete]
@@ -34,11 +52,8 @@ namespace ArchitectureWebCoreApi.Controllers
             _userService.Delete(userId);
         }
 
-        [HttpPut]
+        
 
-        public void Update(User user)
-        {
-            _userService.Update(user);
-        }
+        
     }
 }

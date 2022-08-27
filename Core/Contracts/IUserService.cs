@@ -10,9 +10,9 @@ namespace Core.Contracts
 {
     public interface IUserService
     {
-        List<UserList> GetAll();
-        User Add(User newUser);
+        List<UserList> GetAll(int offset,int limit);
         public void Delete(int id);
-        public User Update(User user);
+        Task<UserList> AddUser(string firstname,string lastname,string password);
+        Task<UserList> GetById(int id);
     }
 }

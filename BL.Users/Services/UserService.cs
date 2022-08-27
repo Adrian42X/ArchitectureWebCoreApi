@@ -19,22 +19,10 @@ namespace BL.Users.Services
             _userRepository = userRepository;
         }
 
-        public List<UserList> GetAll()
+        public List<UserList> GetAll(int offset,int limit)
         {
-            var DALUserList = _userRepository.GetAll();
-            return DALUserList.Select(entity => new UserList
-            {
-                Id = entity.Id,
-                FirstName = entity.FirstName,
-                LastName = entity.LastName,
-                
-            }).ToList();
-        }
-
-        User IUserService.Add(User newUser)
-        {
-            _userRepository.Add(newUser);
-            return newUser;
+            var DALUserList = _userRepository.GetAll(offset,limit);
+            return DALUserList.Select(element => new UserList(element)).ToList();
         }
 
         public void Delete(int userId)
@@ -42,15 +30,18 @@ namespace BL.Users.Services
             _userRepository.Delete(userId);
         }
 
-        public User Update(User user)
+        public async Task<UserList?> GetById(int id)
         {
-            var existingUser = _userRepository.FindById(user.Id);
-            existingUser.FirstName = user.FirstName;
-            existingUser.LastName = user.LastName;
-            existingUser.password = user.password;
-            _userRepository.Update(existingUser);
-            return user;
+            var user = await _userRepository.FindById(id);
+
+            return user == null ? null : new UserList(user);
         }
 
+        public async Task<UserList> AddUser(string firstname, string lastname, string password)
+        {
+            var user=new User { FirstName=firstname,LastName=lastname,password=password};
+            var addedUser = await _userRepository.Add(user);
+            return new UserList(addedUser);
+        }
     }
 }

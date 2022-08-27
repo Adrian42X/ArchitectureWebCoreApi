@@ -18,15 +18,10 @@ namespace BL.Messages.Services
             _messageRepository = message;
         }
 
-        public List<MessageList> GetAll()
+        public List<MessageList> GetAll(int offset,int limit)
         {
-            var DALMessageList = _messageRepository.GetAll();
-            return DALMessageList.Select(entity => new MessageList
-            {
-                Title = entity.Title,
-                Description = entity.Description,
-                Price = entity.Price,
-            }).ToList();
+            var DALMessageList = _messageRepository.GetAll(offset,limit);
+            return DALMessageList.Select(entity => new MessageList(entity)).ToList();
         }
     }
 }

@@ -9,10 +9,10 @@ namespace Core.Repositories
     public interface IRepository<T>
     {
         T Get();
-        T Add(T entity);
-        IEnumerable<T> GetAll();
+        Task<T> Add(T entity);
+        IEnumerable<T> GetAll(int offset,int limit);
         T FindByName(string name);
-        T FindById(int id);
+        Task<T?> FindById(int id);
         T Update(T entity);
         public void Delete(int id);
     }
