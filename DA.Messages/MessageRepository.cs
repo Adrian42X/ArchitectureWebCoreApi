@@ -22,7 +22,7 @@ namespace DA.Messages
             throw new NotImplementedException();
         }
 
-        public void Delete(int id)
+        public Task Delete(int id)
         {
             throw new NotImplementedException();
         }
@@ -47,7 +47,7 @@ namespace DA.Messages
             return _projectContext.Messsages.Skip(offset).Take(limit);
         }
 
-        public Message Update(Message entity)
+        public async Task<Message> Update(Message entity)
         {
             throw new NotImplementedException();
         }

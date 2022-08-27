@@ -25,11 +25,6 @@ namespace BL.Users.Services
             return DALUserList.Select(element => new UserList(element)).ToList();
         }
 
-        public void Delete(int userId)
-        {
-            _userRepository.Delete(userId);
-        }
-
         public async Task<UserList?> GetById(int id)
         {
             var user = await _userRepository.FindById(id);
@@ -42,6 +37,24 @@ namespace BL.Users.Services
             var user=new User { FirstName=firstname,LastName=lastname,password=password};
             var addedUser = await _userRepository.Add(user);
             return new UserList(addedUser);
+        }
+
+        public async Task<UserList> UpdateUser(int userId,string firstname, string lastname)
+        {
+            var user =await _userRepository.FindById(userId);
+            if (user == null)
+            {
+                throw new InvalidOperationException("User was not found !");
+            }
+            user.FirstName = firstname;
+            user.LastName = lastname;
+            var updateUser=await _userRepository.Update(user);
+            return new UserList(updateUser);
+        }
+
+        public async Task DeleteUser(int id)
+        {
+            await _userRepository.Delete(id);
         }
     }
 }

@@ -46,14 +46,35 @@ namespace ArchitectureWebCoreApi.Controllers
             return Ok(createdUser);
         }
 
-        [HttpDelete]
-        public void DeleteUserAsync(int userId)
+        [HttpPatch]
+        [Route("{userId}")]
+        public async Task<ActionResult<UserList>> UpdateUser(
+            [Required][FromRoute] int userId,
+            [Required][FromForm] string firstname,
+            [Required][FromForm] string lastname)
         {
-            _userService.Delete(userId);
+            var user=await _userService.GetById(userId);
+            if(user==null)
+            {
+                return NotFound();
+            }
+            var updatedUser= await _userService.UpdateUser(userId, firstname, lastname);
+            return Ok(updatedUser);
         }
 
-        
+        [HttpDelete]
+        [Route("{userId}")]
 
+        public async Task<ActionResult<UserList>> DeleteUser([Required][FromRoute] int userId)
+        {
+           var user= await _userService.GetById(userId);
+           if(user==null)
+           {
+              return NotFound();
+           }
+           await _userService.DeleteUser(userId);
+           return Ok(user);
+        }
         
     }
 }

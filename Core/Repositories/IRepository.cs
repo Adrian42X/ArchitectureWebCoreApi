@@ -13,7 +13,7 @@ namespace Core.Repositories
         IEnumerable<T> GetAll(int offset,int limit);
         T FindByName(string name);
         Task<T?> FindById(int id);
-        T Update(T entity);
-        public void Delete(int id);
+        Task<T> Update(T entity);
+        Task Delete(int id);
     }
 }

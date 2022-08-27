@@ -11,8 +11,11 @@ namespace Core.Contracts
     public interface IUserService
     {
         List<UserList> GetAll(int offset,int limit);
-        public void Delete(int id);
+        Task DeleteUser(int id);
         Task<UserList> AddUser(string firstname,string lastname,string password);
         Task<UserList> GetById(int id);
+        Task<UserList> UpdateUser(int userId,string firstname, string lastname);
+
+
     }
 }

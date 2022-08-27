@@ -20,17 +20,17 @@ namespace DA.Users
         public async Task<User> Add(User entity)
         {
             _projectContext.Users.Add(entity);
-            _projectContext.SaveChanges();
+            await _projectContext.SaveChangesAsync();
             return entity;
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            var user = _projectContext.Users.FirstOrDefault(x => x.Id == id);
+            var user = await _projectContext.FindAsync<User>(id);
             if (user != null)
             {
-                _projectContext.Remove(user);
-                _projectContext.SaveChanges();
+                _projectContext.Users.Remove(user);
+                await _projectContext.SaveChangesAsync();
             }    
         }
 
@@ -54,15 +54,10 @@ namespace DA.Users
             return _projectContext.Users.Skip(offset).Take(limit);
         }
 
-        public User Update(User userUpdate)
+        public async Task<User> Update(User entity)
         {
-            var userUpdated=_projectContext.Users.FirstOrDefault(x => x.Id == userUpdate.Id);
-            userUpdated.FirstName=userUpdate.FirstName;
-            userUpdated.LastName=userUpdate.LastName;
-            userUpdated.password = userUpdate.password;
-            _projectContext.SaveChanges();
-            return userUpdate;
+           await _projectContext.SaveChangesAsync();
+           return entity;
         }
-       
     }
 }
