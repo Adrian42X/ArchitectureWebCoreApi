@@ -11,9 +11,11 @@ namespace ArchitectureWebCoreApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-        public UsersController(IUserService userService)
+        private readonly ILogger<UsersController> _logger;
+        public UsersController(IUserService userService, ILogger<UsersController> logger)
         {
             _userService = userService;
+            _logger = logger;
         }
         [HttpGet]
 
@@ -29,6 +31,7 @@ namespace ArchitectureWebCoreApi.Controllers
             var user = await _userService.GetById(userId);
             if(user == null)
             {
+                _logger.LogWarning("Can't find user with id={userId}",userId);
                 return NotFound();
             }
             return Ok(user);
@@ -56,6 +59,7 @@ namespace ArchitectureWebCoreApi.Controllers
             var user=await _userService.GetById(userId);
             if(user==null)
             {
+                _logger.LogWarning("Can't find user with id={userId}",userId);
                 return NotFound();
             }
             var updatedUser= await _userService.UpdateUser(userId, firstname, lastname);
@@ -70,7 +74,8 @@ namespace ArchitectureWebCoreApi.Controllers
            var user= await _userService.GetById(userId);
            if(user==null)
            {
-              return NotFound();
+              _logger.LogWarning("Can't find user with id={userId}", userId);
+                return NotFound();
            }
            await _userService.DeleteUser(userId);
            return Ok(user);

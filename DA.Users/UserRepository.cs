@@ -1,4 +1,5 @@
 ﻿using Core.Repositories;
+using Microsoft.Extensions.Logging;
 using ProjectDatabase.Context;
 using ProjectDatabase.Models;
 using System;
@@ -12,9 +13,11 @@ namespace DA.Users
     public class UserRepository : IRepository<User>
     {
         private readonly ProjectContext _projectContext;
-        public UserRepository(ProjectContext context)
+        private readonly ILogger<UserRepository> _logger;
+        public UserRepository(ProjectContext context, ILogger<UserRepository> logger)
         {
             _projectContext = context;
+            _logger = logger;
         }
 
         public async Task<User> Add(User entity)
@@ -51,7 +54,8 @@ namespace DA.Users
 
         public IEnumerable<User> GetAll(int offset,int limit)
         {
-            return _projectContext.Users.Skip(offset).Take(limit);
+            _logger.LogInformation("Getting users with offset={offset} and limit={limit}", offset, limit);
+            return _projectContext.Users.OrderBy(u=>u.Id).Skip(offset).Take(limit);
         }
 
         public async Task<User> Update(User entity)
