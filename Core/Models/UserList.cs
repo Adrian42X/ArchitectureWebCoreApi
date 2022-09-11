@@ -17,7 +17,7 @@ namespace Core.Models
         {
 
         }
-        public UserList(User user)
+        public UserList(ApplicationUser user)
         {
             Id = user.Id;
             FirstName= user.FirstName;

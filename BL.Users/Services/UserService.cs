@@ -12,9 +12,9 @@ namespace BL.Users.Services
 {
     public class UserService : IUserService
     {
-        IRepository<User> _userRepository;
+        IRepository<ApplicationUser> _userRepository;
 
-        public UserService(IRepository<User> userRepository)
+        public UserService(IRepository<ApplicationUser> userRepository)
         {
             _userRepository = userRepository;
         }
@@ -34,7 +34,7 @@ namespace BL.Users.Services
 
         public async Task<UserList> AddUser(string firstname, string lastname, string password)
         {
-            var user=new User { FirstName=firstname,LastName=lastname,password=password};
+            var user=new ApplicationUser { FirstName=firstname,LastName=lastname,PasswordHash=password};
             var addedUser = await _userRepository.Add(user);
             return new UserList(addedUser);
         }

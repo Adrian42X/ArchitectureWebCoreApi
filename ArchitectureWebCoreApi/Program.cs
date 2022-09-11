@@ -4,6 +4,7 @@ using Core.Contracts;
 using Core.Repositories;
 using DA.Messages;
 using DA.Users;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ProjectDatabase.Context;
 using ProjectDatabase.Models;
@@ -21,9 +22,13 @@ builder.Services.AddDbContext<ProjectContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("ProjectConnection")));
 
 builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddTransient<IRepository<User>, UserRepository>();
+builder.Services.AddTransient<IRepository<ApplicationUser>, UserRepository>();
 builder.Services.AddTransient<IMessageService, MessageService>();
 builder.Services.AddTransient<IRepository<Message>, MessageRepository>();
+
+builder.Services.AddIdentityCore<ApplicationUser>()
+    .AddEntityFrameworkStores<ProjectContext>()
+    .AddDefaultTokenProviders();
 
 var app = builder.Build();
 

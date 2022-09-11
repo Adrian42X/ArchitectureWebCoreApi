@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DA.Users
 {
-    public class UserRepository : IRepository<User>
+    public class UserRepository : IRepository<ApplicationUser>
     {
         private readonly ProjectContext _projectContext;
         private readonly ILogger<UserRepository> _logger;
@@ -20,7 +20,7 @@ namespace DA.Users
             _logger = logger;
         }
 
-        public async Task<User> Add(User entity)
+        public async Task<ApplicationUser> Add(ApplicationUser entity)
         {
             _projectContext.Users.Add(entity);
             await _projectContext.SaveChangesAsync();
@@ -29,7 +29,7 @@ namespace DA.Users
 
         public async Task Delete(int id)
         {
-            var user = await _projectContext.FindAsync<User>(id);
+            var user = await _projectContext.FindAsync<ApplicationUser>(id);
             if (user != null)
             {
                 _projectContext.Users.Remove(user);
@@ -37,28 +37,28 @@ namespace DA.Users
             }    
         }
 
-        public async Task<User> FindById(int id)
+        public async Task<ApplicationUser> FindById(int id)
         {
-           return await _projectContext.FindAsync<User>(id);
+           return await _projectContext.FindAsync<ApplicationUser>(id);
         }
 
-        public User FindByName(string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        public User Get()
+        public ApplicationUser FindByName(string name)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<User> GetAll(int offset,int limit)
+        public ApplicationUser Get()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<ApplicationUser> GetAll(int offset,int limit)
         {
             _logger.LogInformation("Getting users with offset={offset} and limit={limit}", offset, limit);
             return _projectContext.Users.OrderBy(u=>u.Id).Skip(offset).Take(limit);
         }
 
-        public async Task<User> Update(User entity)
+        public async Task<ApplicationUser> Update(ApplicationUser entity)
         {
            await _projectContext.SaveChangesAsync();
            return entity;
