@@ -12,7 +12,7 @@ namespace Core.Contracts
     {
         List<UserList> GetAll(int offset,int limit);
         Task DeleteUser(int id);
-        Task<UserList> AddUser(string firstname,string lastname,string password);
+        Task<UserList> AddUser(string firstname,string lastname,string password,string username);
         Task<UserList> GetById(int id);
         Task<UserList> UpdateUser(int userId,string firstname, string lastname);
 

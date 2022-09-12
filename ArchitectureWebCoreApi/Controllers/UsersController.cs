@@ -44,7 +44,8 @@ namespace ArchitectureWebCoreApi.Controllers
             [Required][FromForm] string lastName,
             [Required][FromForm] string password)
         {
-            var createdUser=await _userService.AddUser(firstName, lastName, password);
+            string username=firstName+lastName;
+            var createdUser=await _userService.AddUser(firstName, lastName, password,username);
 
             return Ok(createdUser);
         }

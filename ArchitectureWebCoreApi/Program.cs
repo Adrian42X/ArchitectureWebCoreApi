@@ -17,6 +17,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDataProtection();
 
 builder.Services.AddDbContext<ProjectContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("ProjectConnection")));
@@ -26,7 +27,15 @@ builder.Services.AddTransient<IRepository<ApplicationUser>, UserRepository>();
 builder.Services.AddTransient<IMessageService, MessageService>();
 builder.Services.AddTransient<IRepository<Message>, MessageRepository>();
 
-builder.Services.AddIdentityCore<ApplicationUser>()
+builder.Services.AddIdentityCore<ApplicationUser>(options =>
+{
+    options.Password.RequiredUniqueChars = 1;
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 4;
+    options.Password.RequireNonAlphanumeric = false;
+})
     .AddEntityFrameworkStores<ProjectContext>()
     .AddDefaultTokenProviders();
 

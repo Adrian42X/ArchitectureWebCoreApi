@@ -1,6 +1,7 @@
 ﻿using Core.Contracts;
 using Core.Models;
 using Core.Repositories;
+using Microsoft.AspNetCore.Identity;
 using ProjectDatabase.Models;
 using System;
 using System.Collections.Generic;
@@ -13,10 +14,11 @@ namespace BL.Users.Services
     public class UserService : IUserService
     {
         IRepository<ApplicationUser> _userRepository;
-
-        public UserService(IRepository<ApplicationUser> userRepository)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public UserService(IRepository<ApplicationUser> userRepository, UserManager<ApplicationUser> userManager)
         {
             _userRepository = userRepository;
+            _userManager = userManager;
         }
 
         public List<UserList> GetAll(int offset,int limit)
@@ -32,11 +34,19 @@ namespace BL.Users.Services
             return user == null ? null : new UserList(user);
         }
 
-        public async Task<UserList> AddUser(string firstname, string lastname, string password)
+        public async Task<UserList> AddUser(string firstname, string lastname, string password,string username)
         {
-            var user=new ApplicationUser { FirstName=firstname,LastName=lastname,PasswordHash=password};
-            var addedUser = await _userRepository.Add(user);
-            return new UserList(addedUser);
+            var user=new ApplicationUser { FirstName=firstname,LastName=lastname,UserName=username};
+
+            var result = await _userManager.CreateAsync(user,password);
+
+            if(!result.Succeeded)
+            {
+                throw new InvalidOperationException($"User cannot be created because" +
+                    $"{result.Errors.First().Description}");
+            }
+            //var addedUser = await _userRepository.Add(user);
+            return new UserList(user);
         }
 
         public async Task<UserList> UpdateUser(int userId,string firstname, string lastname)

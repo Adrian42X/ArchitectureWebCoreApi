@@ -13,6 +13,8 @@ namespace Core.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
+        public string UserName { get; set; }
+
         public UserList()
         {
 
@@ -22,6 +24,7 @@ namespace Core.Models
             Id = user.Id;
             FirstName= user.FirstName;
             LastName= user.LastName;
+            UserName = user.UserName;
         }
     }
 }
