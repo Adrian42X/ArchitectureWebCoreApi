@@ -12,16 +12,60 @@ namespace BL.Messages.Services
 {
     public class MessageService : IMessageService
     {
-        IRepository<Message> _messageRepository;
-        public MessageService(IRepository<Message> message)
+        IMessageRepository _messageRepository;
+        public MessageService(IMessageRepository message)
         {
             _messageRepository = message;
         }
 
-        public List<MessageList> GetAll(int offset,int limit)
+        public async Task<Message> CreateMessage(int userId, string title, string description, float price)
         {
-            var DALMessageList = _messageRepository.GetAll(offset,limit);
-            return DALMessageList.Select(entity => new MessageList(entity)).ToList();
+            return await _messageRepository.CreateMessage(userId, title, description, price);
+        }
+
+        public async Task DeleteMessage(int id)
+        {
+            var message = await _messageRepository.GetById(id);
+
+            if(message == null)
+            {
+                throw new InvalidOperationException("Message not found");
+            }
+            await _messageRepository.DeleteMessage(message);
+        }
+
+        public IEnumerable<Message> GetAllMessages(int offset, int limit)
+        {
+            return _messageRepository.GetAll(offset, limit);
+        }
+
+        public IEnumerable<Message> GetAllMessagesForUser(int userId, int offset, int limit)
+        {
+            return _messageRepository.GetAllForUser(userId, offset, limit);
+        }
+
+        public Task<Message> GetById(int id)
+        {
+            var message = _messageRepository.GetById(id);
+            if(message == null)
+            {
+                throw new InvalidOperationException("Message not found");
+            }
+            return message;
+        }
+
+        public async Task<Message> UpdateMessage(int id, string description, float price)
+        {
+            var messagetoUpdate =await _messageRepository.GetById(id);
+            if(messagetoUpdate == null)
+            {
+                throw new InvalidOperationException("Message not found");
+            }
+
+            messagetoUpdate.Description = description;
+            messagetoUpdate.Price = price;
+            var updatedMessage=await _messageRepository.UpdateMessage(messagetoUpdate);
+            return updatedMessage;
         }
     }
 }

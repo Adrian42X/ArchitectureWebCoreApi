@@ -1,4 +1,5 @@
 ﻿using Core.Repositories;
+using Microsoft.EntityFrameworkCore;
 using ProjectDatabase.Context;
 using ProjectDatabase.Models;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DA.Messages
 {
-    public class MessageRepository : IRepository<Message>
+    public class MessageRepository : IMessageRepository
     {
         private readonly ProjectContext _projectContext;
         public MessageRepository(ProjectContext context)
@@ -17,37 +18,42 @@ namespace DA.Messages
             _projectContext = context;
         }
 
-        public Task<Message> Add(Message entity)
+        public async Task<Message> CreateMessage(int userId, string title, string description,float price)
+        {
+            Message message = new Message
+            {
+                UserId = userId,
+                Title = title,
+                Price = price,
+                Description = description
+            };
+
+            _projectContext.Messsages.Add(message);
+            await _projectContext.SaveChangesAsync();
+            return message;
+        }
+
+        public Task DeleteMessage(Message message)
         {
             throw new NotImplementedException();
         }
 
-        public Task Delete(int id)
+        public IEnumerable<Message> GetAll(int offset, int limit)
         {
-            throw new NotImplementedException();
+            return _projectContext.Messsages.Include(prop=>prop.User).Skip(offset).Take(limit);
         }
 
-        public async Task<Message?> FindById(int id)
+        public IEnumerable<Message> GetAllForUser(int userId, int offset, int limit)
         {
-            throw new NotImplementedException();
+            return _projectContext.Messsages.Include(p=>p.User).Where(p => p.UserId == userId).Skip(offset).Take(limit);
         }
 
-        public Message FindByName(string name)
+        public async Task<Message?> GetById(int messageId)
         {
-            throw new NotImplementedException();
-        }
+           return await _projectContext.Messsages.Include(p => p.User).SingleOrDefaultAsync(p => p.Id == messageId);
+        }    
 
-        public Message Get()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Message> GetAll(int offset,int limit)
-        {
-            return _projectContext.Messsages.Skip(offset).Take(limit);
-        }
-
-        public async Task<Message> Update(Message entity)
+        public Task<Message> UpdateMessage(Message message)
         {
             throw new NotImplementedException();
         }

@@ -1,9 +1,11 @@
+using ArchitectureWebCoreApi.Authentication;
 using BL.Messages.Services;
 using BL.Users.Services;
 using Core.Contracts;
 using Core.Repositories;
 using DA.Messages;
 using DA.Users;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ProjectDatabase.Context;
@@ -23,9 +25,9 @@ builder.Services.AddDbContext<ProjectContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("ProjectConnection")));
 
 builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddTransient<IRepository<ApplicationUser>, UserRepository>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IMessageService, MessageService>();
-builder.Services.AddTransient<IRepository<Message>, MessageRepository>();
+builder.Services.AddTransient<IMessageRepository, MessageRepository>();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
 {
@@ -38,6 +40,10 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 })
     .AddEntityFrameworkStores<ProjectContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication("BasicAuthentication")
+    .AddScheme<AuthenticationSchemeOptions,BasicAuthenticationHandler>("BasicAuthentication",null);
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -56,6 +62,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseAuthorization();
 

@@ -12,6 +12,7 @@ namespace Core.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public float Price { get; set; }
+        public string UserName { get; set; }
 
         public MessageList()
         {
@@ -22,6 +23,7 @@ namespace Core.Models
             Title = message.Title;
             Description = message.Description;
             Price = message.Price;
+            UserName = message.User.UserName;
         }
     }
 }

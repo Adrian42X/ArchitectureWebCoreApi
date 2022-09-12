@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DA.Users
 {
-    public class UserRepository : IRepository<ApplicationUser>
+    public class UserRepository : IUserRepository
     {
         private readonly ProjectContext _projectContext;
         private readonly ILogger<UserRepository> _logger;

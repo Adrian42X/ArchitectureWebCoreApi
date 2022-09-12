@@ -13,9 +13,9 @@ namespace BL.Users.Services
 {
     public class UserService : IUserService
     {
-        IRepository<ApplicationUser> _userRepository;
+        IUserRepository _userRepository;
         private readonly UserManager<ApplicationUser> _userManager;
-        public UserService(IRepository<ApplicationUser> userRepository, UserManager<ApplicationUser> userManager)
+        public UserService(IUserRepository userRepository, UserManager<ApplicationUser> userManager)
         {
             _userRepository = userRepository;
             _userManager = userManager;
