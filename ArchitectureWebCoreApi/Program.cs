@@ -6,10 +6,13 @@ using Core.Repositories;
 using DA.Messages;
 using DA.Users;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using ProjectDatabase.Context;
 using ProjectDatabase.Models;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,21 +32,30 @@ builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IMessageService, MessageService>();
 builder.Services.AddTransient<IMessageRepository, MessageRepository>();
 
-builder.Services.AddIdentityCore<ApplicationUser>(options =>
-{
-    options.Password.RequiredUniqueChars = 1;
-    options.Password.RequireDigit = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequiredLength = 4;
-    options.Password.RequireNonAlphanumeric = false;
-})
+builder.Services.AddIdentity<ApplicationUser,IdentityRole<int>>()
     .AddEntityFrameworkStores<ProjectContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddAuthentication("BasicAuthentication")
-    .AddScheme<AuthenticationSchemeOptions,BasicAuthenticationHandler>("BasicAuthentication",null);
-builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}
+).AddJwtBearer(options =>
+{
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SecurityKey"]))
+    };
+});
+
 
 var app = builder.Build();
 
